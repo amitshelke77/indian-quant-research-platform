@@ -1,6 +1,11 @@
 from datetime import date
 
-from sqlalchemy import Date, Float, ForeignKey
+from sqlalchemy import (
+    Date,
+    Float,
+    ForeignKey,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.core.base import Base
@@ -9,16 +14,24 @@ from backend.core.base import Base
 class OHLCV(Base):
     __tablename__ = "ohlcv"
 
+    __table_args__ = (
+        UniqueConstraint(
+            "symbol_id",
+            "trading_date",
+            name="uq_symbol_date",
+        ),
+    )
+
     id: Mapped[int] = mapped_column(primary_key=True)
 
     symbol_id: Mapped[int] = mapped_column(
         ForeignKey("symbols.id"),
-        index=True
+        index=True,
     )
 
     trading_date: Mapped[date] = mapped_column(
         Date,
-        index=True
+        index=True,
     )
 
     open: Mapped[float] = mapped_column(Float)
