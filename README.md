@@ -172,7 +172,7 @@ indian-quant-research-platform/
 ### Clone Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/indian-quant-research-platform.git
+git clone https://github.com/amitshelke77/indian-quant-research-platform.git
 
 cd indian-quant-research-platform
 ```
