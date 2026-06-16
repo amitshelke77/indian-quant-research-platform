@@ -1,6 +1,7 @@
 # Python
 __pycache__/
-*.py[cod]
+*.pyc
+.pytest_cache/
 
 # Virtual Environment
 venv/
@@ -29,5 +30,3 @@ build/
 # Node
 node_modules/
 
-__pycache__/
-*.py[cod]
