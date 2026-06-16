@@ -8,6 +8,16 @@ def seed() -> None:
     db: Session = SessionLocal()
 
     try:
+        existing = (
+            db.query(Symbol)
+            .filter(Symbol.symbol == "RELIANCE")
+            .first()
+        )
+
+        if existing:
+            print("Symbol already exists")
+            return
+
         symbol = Symbol(
             symbol="RELIANCE",
             company_name="Reliance Industries Ltd",
@@ -17,7 +27,7 @@ def seed() -> None:
         db.add(symbol)
         db.commit()
 
-        print("Symbol Inserted")
+        print("Symbol inserted")
 
     finally:
         db.close()
