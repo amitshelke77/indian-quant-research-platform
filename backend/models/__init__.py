@@ -6,3 +6,5 @@ from backend.models.technical_indicator import (
 from backend.models.backtest_result import (
     BacktestResult,
 )
+
+from backend.models.gann_analysis import GannAnalysis

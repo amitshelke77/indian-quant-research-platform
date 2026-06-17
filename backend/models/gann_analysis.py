@@ -4,8 +4,10 @@ from sqlalchemy import (
     Date,
     Float,
     ForeignKey,
+    Integer,
     UniqueConstraint,
 )
+
 from sqlalchemy.orm import (
     Mapped,
     mapped_column,
@@ -40,37 +42,60 @@ class GannAnalysis(Base):
         index=True,
     )
 
-    gann_angle_1x1: Mapped[float | None] = mapped_column(
+    # Swing flags
+
+    swing_high_flag: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    swing_low_flag: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    # Swing prices
+
+    swing_high_price: Mapped[float | None] = mapped_column(
         Float,
         nullable=True,
     )
 
-    gann_angle_2x1: Mapped[float | None] = mapped_column(
+    swing_low_price: Mapped[float | None] = mapped_column(
         Float,
         nullable=True,
     )
 
-    gann_angle_1x2: Mapped[float | None] = mapped_column(
+    # Gann angles
+
+    angle_1x1: Mapped[float | None] = mapped_column(
         Float,
         nullable=True,
     )
 
-    square_of_9_level: Mapped[float | None] = mapped_column(
+    angle_2x1: Mapped[float | None] = mapped_column(
         Float,
         nullable=True,
     )
 
-    time_cycle_45: Mapped[float | None] = mapped_column(
+    angle_1x2: Mapped[float | None] = mapped_column(
         Float,
         nullable=True,
     )
 
-    time_cycle_90: Mapped[float | None] = mapped_column(
+    # Time cycles
+
+    cycle_45: Mapped[float | None] = mapped_column(
         Float,
         nullable=True,
     )
 
-    time_cycle_180: Mapped[float | None] = mapped_column(
+    cycle_90: Mapped[float | None] = mapped_column(
+        Float,
+        nullable=True,
+    )
+
+    cycle_180: Mapped[float | None] = mapped_column(
         Float,
         nullable=True,
     )
