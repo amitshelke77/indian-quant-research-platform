@@ -101,12 +101,12 @@ def main():
 
             max_drawdown=result["max_drawdown"],
 
-            alpha=None,
-            beta=None,
-            tracking_error=None,
-            information_ratio=None,
+            alpha=result["alpha"],
+            beta=result["beta"],
+            tracking_error=result["tracking_error"],
+            information_ratio=result["information_ratio"],
 
-            benchmark_return=None,
+            benchmark_return=result["benchmark_return"],
             transaction_costs=0.0,
         )
 

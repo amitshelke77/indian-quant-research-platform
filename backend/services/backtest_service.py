@@ -4,6 +4,10 @@ from backend.services.metrics_service import (
     MetricsService,
 )
 
+from backend.services.benchmark_service import (
+    BenchmarkService,
+)
+
 
 class BacktestService:
 
@@ -48,30 +52,74 @@ class BacktestService:
             - 1
         )
 
-        cagr = MetricsService.calculate_cagr(
-            equity_curve
-        )
-
-        sharpe = MetricsService.calculate_sharpe(
-            df["strategy_returns"]
-        )
-
-        sortino = MetricsService.calculate_sortino(
-            df["strategy_returns"]
-        )
-
-        max_dd = MetricsService.calculate_max_drawdown(
-            equity_curve
-        )
-
-        calmar = MetricsService.calculate_calmar(
-            cagr,
-            max_dd,
-        )
-
         annual_return = (
             MetricsService.calculate_annual_return(
                 df["strategy_returns"]
+            )
+        )
+
+        cagr = (
+            MetricsService.calculate_cagr(
+                equity_curve
+            )
+        )
+
+        sharpe = (
+            MetricsService.calculate_sharpe(
+                df["strategy_returns"]
+            )
+        )
+
+        sortino = (
+            MetricsService.calculate_sortino(
+                df["strategy_returns"]
+            )
+        )
+
+        max_drawdown = (
+            MetricsService.calculate_max_drawdown(
+                equity_curve
+            )
+        )
+
+        calmar = (
+            MetricsService.calculate_calmar(
+                cagr,
+                max_drawdown,
+            )
+        )
+
+        benchmark_return = (
+            BenchmarkService.buy_and_hold_return(
+                df["Close"]
+            )
+        )
+
+        alpha = (
+            BenchmarkService.alpha(
+                total_return,
+                benchmark_return,
+            )
+        )
+
+        beta = (
+            BenchmarkService.beta(
+                df["strategy_returns"],
+                df["returns"],
+            )
+        )
+
+        tracking_error = (
+            BenchmarkService.tracking_error(
+                df["strategy_returns"],
+                df["returns"],
+            )
+        )
+
+        information_ratio = (
+            BenchmarkService.information_ratio(
+                df["strategy_returns"],
+                df["returns"],
             )
         )
 
@@ -82,5 +130,10 @@ class BacktestService:
             "sharpe_ratio": float(sharpe),
             "sortino_ratio": float(sortino),
             "calmar_ratio": float(calmar),
-            "max_drawdown": float(max_dd),
+            "max_drawdown": float(max_drawdown),
+            "benchmark_return": float(benchmark_return),
+            "alpha": float(alpha),
+            "beta": float(beta),
+            "tracking_error": float(tracking_error),
+            "information_ratio": float(information_ratio),
         }
