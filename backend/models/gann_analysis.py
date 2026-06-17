@@ -66,7 +66,39 @@ class GannAnalysis(Base):
         nullable=True,
     )
 
-    # Gann angles
+    # Market Structure
+
+    higher_high_flag: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    higher_low_flag: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    lower_high_flag: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    lower_low_flag: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    # Trend State
+    # 1 = Uptrend
+    # 0 = Sideways
+    # -1 = Downtrend
+
+    trend_state: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+
+    # Gann Angles
 
     angle_1x1: Mapped[float | None] = mapped_column(
         Float,
@@ -83,7 +115,7 @@ class GannAnalysis(Base):
         nullable=True,
     )
 
-    # Time cycles
+    # Time Cycles
 
     cycle_45: Mapped[float | None] = mapped_column(
         Float,

@@ -46,13 +46,8 @@ class GannService:
             df["Low"]
         )
 
-        df["swing_high_flag"] = (
-            swing_highs.astype(int)
-        )
-
-        df["swing_low_flag"] = (
-            swing_lows.astype(int)
-        )
+        df["swing_high_flag"] = swing_highs.astype(int)
+        df["swing_low_flag"] = swing_lows.astype(int)
 
         df["swing_high_price"] = None
         df["swing_low_price"] = None
@@ -67,22 +62,106 @@ class GannService:
             "swing_low_price",
         ] = df["Low"]
 
-        # Placeholder values
-        # We'll replace these with proper Gann math later
+        df["higher_high_flag"] = 0
+        df["higher_low_flag"] = 0
+        df["lower_high_flag"] = 0
+        df["lower_low_flag"] = 0
+
+        df["trend_state"] = 0
+
+        previous_swing_high = None
+        previous_swing_low = None
+
+        last_high_structure = None
+        last_low_structure = None
+
+        current_trend = 0
+
+        for idx, row in df.iterrows():
+
+            if row["swing_high_flag"] == 1:
+
+                current_high = row["swing_high_price"]
+
+                if previous_swing_high is not None:
+
+                    if current_high > previous_swing_high:
+
+                        df.at[
+                            idx,
+                            "higher_high_flag",
+                        ] = 1
+
+                        last_high_structure = "HH"
+
+                    elif current_high < previous_swing_high:
+
+                        df.at[
+                            idx,
+                            "lower_high_flag",
+                        ] = 1
+
+                        last_high_structure = "LH"
+
+                previous_swing_high = current_high
+
+            if row["swing_low_flag"] == 1:
+
+                current_low = row["swing_low_price"]
+
+                if previous_swing_low is not None:
+
+                    if current_low > previous_swing_low:
+
+                        df.at[
+                            idx,
+                            "higher_low_flag",
+                        ] = 1
+
+                        last_low_structure = "HL"
+
+                    elif current_low < previous_swing_low:
+
+                        df.at[
+                            idx,
+                            "lower_low_flag",
+                        ] = 1
+
+                        last_low_structure = "LL"
+
+                previous_swing_low = current_low
+
+            if (
+                last_high_structure == "HH"
+                and
+                last_low_structure == "HL"
+            ):
+                current_trend = 1
+
+            elif (
+                last_high_structure == "LH"
+                and
+                last_low_structure == "LL"
+            ):
+                current_trend = -1
+
+            df.at[
+                idx,
+                "trend_state",
+            ] = current_trend
+
+        # Placeholder Gann values
 
         df["angle_1x1"] = (
-            df["Close"].shift(1)
-            + 1
+            df["Close"].shift(1) + 1
         )
 
         df["angle_2x1"] = (
-            df["Close"].shift(1)
-            + 2
+            df["Close"].shift(1) + 2
         )
 
         df["angle_1x2"] = (
-            df["Close"].shift(1)
-            + 0.5
+            df["Close"].shift(1) + 0.5
         )
 
         df["cycle_45"] = (

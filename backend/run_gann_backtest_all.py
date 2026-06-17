@@ -24,7 +24,7 @@ from backend.repositories.backtest_repository import (
 )
 
 
-STRATEGY_NAME = "GANN_SWING_EMA50"
+STRATEGY_NAME = "GANN_STRUCTURE_EMA50"
 
 
 def main():
@@ -103,6 +103,8 @@ def main():
 
                         "ema50": t.ema50,
 
+                        "trend_state": g.trend_state,
+                        
                         "swing_high_flag":
                             g.swing_high_flag,
 

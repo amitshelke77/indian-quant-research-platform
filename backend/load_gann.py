@@ -24,6 +24,14 @@ def safe_float(value):
     return float(value)
 
 
+def safe_int(value):
+
+    if pd.isna(value):
+        return None
+
+    return int(value)
+
+
 def main():
 
     db = SessionLocal()
@@ -90,11 +98,11 @@ def main():
                     symbol_id=symbol.id,
                     trading_date=row["Date"],
 
-                    swing_high_flag=int(
+                    swing_high_flag=safe_int(
                         row["swing_high_flag"]
                     ),
 
-                    swing_low_flag=int(
+                    swing_low_flag=safe_int(
                         row["swing_low_flag"]
                     ),
 
@@ -104,6 +112,26 @@ def main():
 
                     swing_low_price=safe_float(
                         row["swing_low_price"]
+                    ),
+
+                    higher_high_flag=safe_int(
+                        row["higher_high_flag"]
+                    ),
+
+                    higher_low_flag=safe_int(
+                        row["higher_low_flag"]
+                    ),
+
+                    lower_high_flag=safe_int(
+                        row["lower_high_flag"]
+                    ),
+
+                    lower_low_flag=safe_int(
+                        row["lower_low_flag"]
+                    ),
+
+                    trend_state=safe_int(
+                        row["trend_state"]
                     ),
 
                     angle_1x1=safe_float(

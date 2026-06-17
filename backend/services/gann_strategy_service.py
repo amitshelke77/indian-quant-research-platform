@@ -21,7 +21,9 @@ class GannStrategyService:
 
             if (
                 row["swing_high_flag"] == 1
-                and pd.notna(row["swing_high_price"])
+                and pd.notna(
+                    row["swing_high_price"]
+                )
             ):
                 latest_swing_high = (
                     row["swing_high_price"]
@@ -29,7 +31,9 @@ class GannStrategyService:
 
             if (
                 row["swing_low_flag"] == 1
-                and pd.notna(row["swing_low_price"])
+                and pd.notna(
+                    row["swing_low_price"]
+                )
             ):
                 latest_swing_low = (
                     row["swing_low_price"]
@@ -37,24 +41,38 @@ class GannStrategyService:
 
             ema50 = row["ema50"]
 
+            trend_state = row[
+                "trend_state"
+            ]
+
+            # ENTRY
             if (
                 not in_position
+                and trend_state == 1
                 and latest_swing_high is not None
-                and row["Close"] > latest_swing_high
-                and row["Close"] > ema50
+                and row["Close"]
+                > latest_swing_high
+                and row["Close"]
+                > ema50
             ):
                 in_position = True
 
+            # EXIT
             elif (
                 in_position
                 and (
+                    trend_state == -1
+                    or
                     (
-                        latest_swing_low is not None
-                        and row["Close"] < latest_swing_low
+                        latest_swing_low
+                        is not None
+                        and row["Close"]
+                        < latest_swing_low
                     )
                     or
                     (
-                        row["Close"] < ema50
+                        row["Close"]
+                        < ema50
                     )
                 )
             ):
