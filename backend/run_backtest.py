@@ -82,8 +82,12 @@ def main():
 
         result = (
             BacktestService()
-            .run_sma_strategy(df)
-        )
+            .run_sma_strategy(
+                df,
+                "sma20",
+                "sma50",
+    )
+)
 
         repo = BacktestRepository(db)
 

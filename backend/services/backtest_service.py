@@ -14,14 +14,43 @@ class BacktestService:
     def run_sma_strategy(
         self,
         df: pd.DataFrame,
+        fast_column: str,
+        slow_column: str,
     ) -> dict:
 
         df = df.copy()
 
+        # Remove rows where indicators aren't available yet
+
+        df = df.dropna(
+            subset=[
+                fast_column,
+                slow_column,
+            ]
+        )
+
+        if len(df) < 50:
+
+            return {
+                "total_return": 0.0,
+                "annual_return": 0.0,
+                "cagr": 0.0,
+                "sharpe_ratio": 0.0,
+                "sortino_ratio": 0.0,
+                "calmar_ratio": 0.0,
+                "max_drawdown": 0.0,
+                "benchmark_return": 0.0,
+                "alpha": 0.0,
+                "beta": 0.0,
+                "tracking_error": 0.0,
+                "information_ratio": 0.0,
+            }
+
         df["signal"] = 0
 
         df.loc[
-            df["sma20"] > df["sma50"],
+            df[fast_column]
+            > df[slow_column],
             "signal",
         ] = 1
 
