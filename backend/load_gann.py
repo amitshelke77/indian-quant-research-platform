@@ -134,6 +134,10 @@ def main():
                         row["trend_state"]
                     ),
 
+                    structure_score=safe_int(
+                        row["structure_score"]
+                    ),
+
                     angle_1x1=safe_float(
                         row["angle_1x1"]
                     ),

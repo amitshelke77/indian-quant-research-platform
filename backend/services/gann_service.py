@@ -46,8 +46,13 @@ class GannService:
             df["Low"]
         )
 
-        df["swing_high_flag"] = swing_highs.astype(int)
-        df["swing_low_flag"] = swing_lows.astype(int)
+        df["swing_high_flag"] = (
+            swing_highs.astype(int)
+        )
+
+        df["swing_low_flag"] = (
+            swing_lows.astype(int)
+        )
 
         df["swing_high_price"] = None
         df["swing_low_price"] = None
@@ -62,106 +67,136 @@ class GannService:
             "swing_low_price",
         ] = df["Low"]
 
+        # Structure columns
+
         df["higher_high_flag"] = 0
         df["higher_low_flag"] = 0
         df["lower_high_flag"] = 0
         df["lower_low_flag"] = 0
 
         df["trend_state"] = 0
+        df["structure_score"] = 0
 
         previous_swing_high = None
         previous_swing_low = None
 
-        last_high_structure = None
-        last_low_structure = None
-
         current_trend = 0
+        structure_score = 0
 
         for idx, row in df.iterrows():
 
             if row["swing_high_flag"] == 1:
 
-                current_high = row["swing_high_price"]
+                current_high = (
+                    row["swing_high_price"]
+                )
 
-                if previous_swing_high is not None:
+                if (
+                    previous_swing_high
+                    is not None
+                ):
 
-                    if current_high > previous_swing_high:
+                    if (
+                        current_high
+                        > previous_swing_high
+                    ):
 
                         df.at[
                             idx,
                             "higher_high_flag",
                         ] = 1
 
-                        last_high_structure = "HH"
+                        structure_score += 1
 
-                    elif current_high < previous_swing_high:
+                    elif (
+                        current_high
+                        < previous_swing_high
+                    ):
 
                         df.at[
                             idx,
                             "lower_high_flag",
                         ] = 1
 
-                        last_high_structure = "LH"
+                        structure_score -= 1
 
-                previous_swing_high = current_high
+                previous_swing_high = (
+                    current_high
+                )
 
             if row["swing_low_flag"] == 1:
 
-                current_low = row["swing_low_price"]
+                current_low = (
+                    row["swing_low_price"]
+                )
 
-                if previous_swing_low is not None:
+                if (
+                    previous_swing_low
+                    is not None
+                ):
 
-                    if current_low > previous_swing_low:
+                    if (
+                        current_low
+                        > previous_swing_low
+                    ):
 
                         df.at[
                             idx,
                             "higher_low_flag",
                         ] = 1
 
-                        last_low_structure = "HL"
+                        structure_score += 1
 
-                    elif current_low < previous_swing_low:
+                    elif (
+                        current_low
+                        < previous_swing_low
+                    ):
 
                         df.at[
                             idx,
                             "lower_low_flag",
                         ] = 1
 
-                        last_low_structure = "LL"
+                        structure_score -= 1
 
-                previous_swing_low = current_low
+                previous_swing_low = (
+                    current_low
+                )
 
-            if (
-                last_high_structure == "HH"
-                and
-                last_low_structure == "HL"
-            ):
+            if structure_score >= 2:
                 current_trend = 1
 
-            elif (
-                last_high_structure == "LH"
-                and
-                last_low_structure == "LL"
-            ):
+            elif structure_score <= -2:
                 current_trend = -1
+
+            else:
+                current_trend = 0
 
             df.at[
                 idx,
                 "trend_state",
             ] = current_trend
 
+            df.at[
+                idx,
+                "structure_score",
+            ] = structure_score
+
         # Placeholder Gann values
 
         df["angle_1x1"] = (
-            df["Close"].shift(1) + 1
+            df["Close"].shift(1)
+            + 1
         )
 
         df["angle_2x1"] = (
-            df["Close"].shift(1) + 2
+            df["Close"].shift(1)
+            + 2
         )
 
         df["angle_1x2"] = (
-            df["Close"].shift(1) + 0.5
+            df["Close"].shift(1)
+            + 0.5
         )
 
         df["cycle_45"] = (

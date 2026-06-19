@@ -11,12 +11,12 @@ from backend.models.technical_indicator import (
     TechnicalIndicator,
 )
 
-from backend.services.gann_strategy_service import (
-    GannStrategyService,
-)
-
 from backend.services.gann_backtest_service import (
     GannBacktestService,
+)
+
+from backend.services.gann_structure_score_strategy import (
+    GannStructureScoreStrategy,
 )
 
 from backend.repositories.backtest_repository import (
@@ -24,7 +24,7 @@ from backend.repositories.backtest_repository import (
 )
 
 
-STRATEGY_NAME = "GANN_STRUCTURE_EMA50_RSI"
+STRATEGY_NAME = "GANN_STRUCTURE_SCORE"
 
 
 def main():
@@ -90,51 +90,28 @@ def main():
             )
 
             if not rows:
-                print("No data")
                 continue
 
             df = pd.DataFrame(
                 [
                     {
                         "Date": o.trading_date,
-
                         "Close": o.close,
                         "High": o.high,
                         "Low": o.low,
 
-                        # Indicators
-
                         "ema50": t.ema50,
-                        "rsi14": t.rsi14,
 
-                        # Gann Structure
-
-                        "trend_state":
-                            g.trend_state,
-
-                        "swing_high_flag":
-                            g.swing_high_flag,
-
-                        "swing_low_flag":
-                            g.swing_low_flag,
-
-                        "swing_high_price":
-                            g.swing_high_price,
-
-                        "swing_low_price":
-                            g.swing_low_price,
+                        "structure_score":
+                            g.structure_score,
                     }
                     for o, t, g in rows
                 ]
             )
 
-            if len(df) == 0:
-                print("Empty dataframe")
-                continue
-
             df = (
-                GannStrategyService()
-                .build_signals_rsi(df)
+                GannStructureScoreStrategy()
+                .build_signals(df)
             )
 
             results = (
@@ -158,12 +135,6 @@ def main():
 
                     "sharpe":
                         results["sharpe_ratio"],
-
-                    "alpha":
-                        results["alpha"],
-
-                    "max_dd":
-                        results["max_drawdown"],
                 }
             )
 
@@ -174,38 +145,13 @@ def main():
 
         repo.commit()
 
-        result_df = pd.DataFrame(summary)
-
         print("\n")
         print("=" * 80)
         print("SUMMARY")
         print("=" * 80)
 
-        print(result_df)
-
-        print("\n")
-        print("=" * 80)
-        print("AVERAGES")
-        print("=" * 80)
-
         print(
-            "Average CAGR:",
-            result_df["cagr"].mean()
-        )
-
-        print(
-            "Average Sharpe:",
-            result_df["sharpe"].mean()
-        )
-
-        print(
-            "Average Alpha:",
-            result_df["alpha"].mean()
-        )
-
-        print(
-            "Average Max DD:",
-            result_df["max_dd"].mean()
+            pd.DataFrame(summary)
         )
 
     finally:

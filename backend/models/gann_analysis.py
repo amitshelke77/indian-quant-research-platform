@@ -97,7 +97,12 @@ class GannAnalysis(Base):
         Integer,
         nullable=True,
     )
-
+    
+    structure_score: Mapped[int | None] = mapped_column(
+        Integer,
+        nullable=True,
+    )
+   
     # Gann Angles
 
     angle_1x1: Mapped[float | None] = mapped_column(

@@ -8,6 +8,11 @@ class GannStrategyService:
         df: pd.DataFrame,
     ) -> pd.DataFrame:
 
+        """
+        Original strategy:
+        GANN_STRUCTURE_EMA50
+        """
+
         df = df.copy()
 
         latest_swing_high = None
@@ -46,6 +51,7 @@ class GannStrategyService:
             ]
 
             # ENTRY
+
             if (
                 not in_position
                 and trend_state == 1
@@ -58,6 +64,7 @@ class GannStrategyService:
                 in_position = True
 
             # EXIT
+
             elif (
                 in_position
                 and (
@@ -74,6 +81,64 @@ class GannStrategyService:
                         row["Close"]
                         < ema50
                     )
+                )
+            ):
+                in_position = False
+
+            signals.append(
+                1 if in_position else 0
+            )
+
+        df["signal"] = signals
+
+        return df
+
+    def build_signals_rsi(
+        self,
+        df: pd.DataFrame,
+    ) -> pd.DataFrame:
+
+        """
+        New strategy:
+        GANN_STRUCTURE_EMA50_RSI
+        """
+
+        df = df.copy()
+
+        signals = []
+
+        in_position = False
+
+        for _, row in df.iterrows():
+
+            trend_state = row[
+                "trend_state"
+            ]
+
+            ema50 = row["ema50"]
+
+            rsi14 = row["rsi14"]
+
+            # ENTRY
+
+            if (
+                not in_position
+                and trend_state == 1
+                and pd.notna(ema50)
+                and pd.notna(rsi14)
+                and row["Close"] > ema50
+                and rsi14 > 55
+            ):
+                in_position = True
+
+            # EXIT
+
+            elif (
+                in_position
+                and (
+                    trend_state == -1
+                    or
+                    row["Close"] < ema50
                 )
             ):
                 in_position = False
