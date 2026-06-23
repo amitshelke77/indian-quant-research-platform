@@ -8,3 +8,7 @@ from backend.models.backtest_result import (
 )
 
 from backend.models.gann_analysis import GannAnalysis
+
+from backend.models.pattern_signal import (
+    PatternSignal,
+)
