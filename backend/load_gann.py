@@ -7,8 +7,8 @@ from backend.core.database import SessionLocal
 from backend.models.symbol import Symbol
 from backend.models.ohlcv import OHLCV
 
-from backend.services.gann_service import (
-    GannService,
+from backend.services.gann_service_v2 import (
+    GannServiceV2,
 )
 
 from backend.repositories.gann_repository import (
@@ -46,7 +46,7 @@ def main():
             .all()
         )
 
-        service = GannService()
+        service = GannServiceV2()
 
         total_inserted = 0
 
@@ -136,6 +136,10 @@ def main():
 
                     structure_score=safe_int(
                         row["structure_score"]
+                    ),
+
+                    recent_structure_score=safe_int(
+                        row["recent_structure_score"]
                     ),
 
                     angle_1x1=safe_float(

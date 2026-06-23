@@ -22,8 +22,8 @@ from backend.models.technical_indicator import (
     TechnicalIndicator,
 )
 
-from backend.services.portfolio_backtest_service import (
-    PortfolioBacktestService,
+from backend.services.portfolio_backtest_service_v2 import (
+    PortfolioBacktestServiceV2,
 )
 
 from backend.services.score_service import (
@@ -143,16 +143,16 @@ def main():
         )
 
         results = (
-            PortfolioBacktestService()
+            PortfolioBacktestServiceV2()
             .run(
                 scores_df,
-                top_n=3,
+                top_n=20,
             )
         )
 
         print()
         print("=" * 60)
-        print("PORTFOLIO RESULTS")
+        print("PORTFOLIO RESULTS V2")
         print("=" * 60)
 
         for k, v in (
@@ -168,6 +168,17 @@ def main():
             print(
                 f"{k}: {v}"
             )
+
+        print()
+        print("=" * 60)
+        print("FINAL EQUITY")
+        print("=" * 60)
+
+        print(
+            results[
+                "equity_curve"
+            ].tail()
+        )
 
     finally:
 

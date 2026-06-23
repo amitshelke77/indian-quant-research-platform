@@ -24,7 +24,7 @@ from backend.repositories.backtest_repository import (
 )
 
 
-STRATEGY_NAME = "GANN_STRUCTURE_EMA50_RSI"
+STRATEGY_NAME = "GANN_STRUCTURE_EMA50"
 
 
 def main():
@@ -134,7 +134,7 @@ def main():
 
             df = (
                 GannStrategyService()
-                .build_signals_rsi(df)
+                .build_signals(df)
             )
 
             results = (

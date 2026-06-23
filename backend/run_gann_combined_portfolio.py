@@ -18,16 +18,12 @@ from backend.models.gann_analysis import (
     GannAnalysis,
 )
 
-from backend.models.technical_indicator import (
-    TechnicalIndicator,
+from backend.services.portfolio_backtest_service_v2 import (
+    PortfolioBacktestServiceV2,
 )
 
-from backend.services.portfolio_backtest_service import (
-    PortfolioBacktestService,
-)
-
-from backend.services.score_service import (
-    ScoreService,
+from backend.services.combined_score_service import (
+    CombinedScoreService,
 )
 
 
@@ -41,27 +37,12 @@ def main():
             db.query(
                 Symbol,
                 OHLCV,
-                TechnicalIndicator,
                 GannAnalysis,
             )
             .join(
                 OHLCV,
                 Symbol.id
                 == OHLCV.symbol_id,
-            )
-            .join(
-                TechnicalIndicator,
-                (
-                    OHLCV.symbol_id
-                    ==
-                    TechnicalIndicator.symbol_id
-                )
-                &
-                (
-                    OHLCV.trading_date
-                    ==
-                    TechnicalIndicator.trading_date
-                )
             )
             .join(
                 GannAnalysis,
@@ -85,18 +66,13 @@ def main():
         for (
             symbol,
             ohlcv,
-            indicator,
             gann,
         ) in rows:
 
             score = (
-                ScoreService
-                .calculate_score(
-                    close_price=ohlcv.close,
-                    ema50=indicator.ema50,
-                    rsi14=indicator.rsi14,
-                    trend_state=gann.trend_state,
-                    swing_high_price=gann.swing_high_price,
+                CombinedScoreService.calculate(
+                    gann.structure_score,
+                    gann.recent_structure_score,
                 )
             )
 
@@ -114,14 +90,11 @@ def main():
                     "Score":
                         score,
 
-                    "EMA50":
-                        indicator.ema50,
-
                     "Trend":
                         gann.trend_state,
 
-                    "StructureScore":
-                        gann.structure_score,
+                    "EMA50":
+                        0,
                 }
             )
 
@@ -133,26 +106,24 @@ def main():
         print("=" * 60)
         print("DATASET")
         print("=" * 60)
-
         print(
             f"Rows: {len(scores_df)}"
         )
-
         print(
             f"Symbols: {scores_df['Symbol'].nunique()}"
         )
 
         results = (
-            PortfolioBacktestService()
+            PortfolioBacktestServiceV2()
             .run(
                 scores_df,
-                top_n=3,
+                top_n=10,
             )
         )
 
         print()
         print("=" * 60)
-        print("PORTFOLIO RESULTS")
+        print("COMBINED GANN RESULTS")
         print("=" * 60)
 
         for k, v in (
@@ -168,6 +139,17 @@ def main():
             print(
                 f"{k}: {v}"
             )
+
+        print()
+        print("=" * 60)
+        print("FINAL EQUITY")
+        print("=" * 60)
+
+        print(
+            results[
+                "equity_curve"
+            ].tail()
+        )
 
     finally:
 

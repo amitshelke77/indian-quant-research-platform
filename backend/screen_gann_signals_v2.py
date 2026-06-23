@@ -11,6 +11,9 @@ from backend.models.technical_indicator import (
     TechnicalIndicator,
 )
 
+from backend.services.score_service import (
+    ScoreService,
+)
 
 def calculate_score(
     close_price,
@@ -153,7 +156,7 @@ def main():
 
             o, t, g = rows[0]
 
-            score = calculate_score(
+            score = ScoreService.calculate_score(
                 close_price=o.close,
                 ema50=t.ema50,
                 rsi14=t.rsi14,

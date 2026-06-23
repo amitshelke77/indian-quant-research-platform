@@ -9,7 +9,7 @@ class MarketDataService:
 
         data = yf.download(
             ticker,
-            period="1y",
+            period="5y",
             auto_adjust=True,
             progress=False
         )
