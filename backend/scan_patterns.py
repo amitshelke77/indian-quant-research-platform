@@ -20,9 +20,6 @@ from backend.patterns.rounding_bottom_v2 import (
     RoundingBottomDetectorV2,
 )
 
-from backend.patterns.double_bottom_v2 import (
-    DoubleBottomDetectorV2,
-)
 
 from backend.repositories.pattern_signal_repository import (
     PatternSignalRepository,
@@ -56,7 +53,6 @@ def main():
 
             RoundingBottomDetectorV3(),
             
-            DoubleBottomDetectorV2(),
         ]
 
         repo = (
