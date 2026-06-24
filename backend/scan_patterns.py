@@ -12,6 +12,10 @@ from backend.patterns.rounding_bottom import (
     RoundingBottomDetector,
 )
 
+from backend.patterns.rounding_bottom_v5 import (
+    RoundingBottomDetectorV5,
+)
+
 from backend.patterns.double_bottom import (
     DoubleBottomDetector,
 )
@@ -71,6 +75,8 @@ def main():
             CupHandleDetector(),
 
             TrueRoundingBottomDetector(),
+            
+            RoundingBottomDetectorV5(),
 
             RoundingBottomDetectorV4(),
 
