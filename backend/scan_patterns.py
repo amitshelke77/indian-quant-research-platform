@@ -20,9 +20,24 @@ from backend.patterns.rounding_bottom_v2 import (
     RoundingBottomDetectorV2,
 )
 
+from backend.patterns.cup_handle import (
+    CupHandleDetector,
+)
+
+from backend.patterns.bull_flag import (
+    BullFlagDetector,
+)
 
 from backend.repositories.pattern_signal_repository import (
     PatternSignalRepository,
+)
+
+from backend.patterns.true_rounding_bottom import (
+    TrueRoundingBottomDetector,
+)
+
+from backend.patterns.rounding_bottom_v4 import (
+    RoundingBottomDetectorV4,
 )
 
 from backend.patterns.rounding_bottom_v3 import (
@@ -53,6 +68,13 @@ def main():
 
             RoundingBottomDetectorV3(),
             
+            CupHandleDetector(),
+
+            TrueRoundingBottomDetector(),
+
+            RoundingBottomDetectorV4(),
+
+            BullFlagDetector(),
         ]
 
         repo = (
@@ -177,6 +199,29 @@ def main():
                     safe_float(
                         signal["target"]
                     ),
+
+                    rsi=
+                    safe_float(
+                        signal.get("rsi")
+                    ),
+
+                     volume_ratio=
+                     safe_float(
+                         signal.get(
+                             "volume_ratio"
+                         )
+                    ),
+
+                    ema50=
+                    safe_float(
+                        signal.get("ema50")
+                    ),
+
+                    ema200=
+                    safe_float(
+                        signal.get("ema200")
+                    ),
+
 
                 )
 

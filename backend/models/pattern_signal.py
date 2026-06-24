@@ -69,6 +69,26 @@ class PatternSignal(Base):
         nullable=True,
     )
 
+    rsi: Mapped[float | None] = mapped_column(
+        Float,
+        nullable=True,
+    )
+
+    volume_ratio: Mapped[float | None] = mapped_column(
+        Float,
+        nullable=True,
+    )
+
+    ema50: Mapped[float | None] = mapped_column(
+        Float,
+        nullable=True,
+    )
+
+    ema200: Mapped[float | None] = mapped_column(
+        Float,
+        nullable=True,
+    )
+
     outcome: Mapped[str | None] = mapped_column(
         nullable=True,
     )

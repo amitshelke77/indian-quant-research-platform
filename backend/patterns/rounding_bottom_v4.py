@@ -5,7 +5,7 @@ from backend.patterns.pattern_utils import (
 )
 
 
-class RoundingBottomDetectorV3:
+class RoundingBottomDetectorV4:
 
     def detect(
         self,
@@ -84,6 +84,14 @@ class RoundingBottomDetectorV3:
             ):
                 continue
 
+            rsi = float(
+                df.iloc[i]["rsi"]
+            )
+
+            # NEW FILTER
+            if rsi < 70:
+                continue
+
             if (
                 i - last_signal
                 < cooldown
@@ -117,7 +125,7 @@ class RoundingBottomDetectorV3:
                         df.iloc[i]["Date"],
 
                     "pattern":
-                        "ROUNDING_BOTTOM_V3",
+                        "ROUNDING_BOTTOM_V4",
 
                     "entry":
                         close,
@@ -129,12 +137,10 @@ class RoundingBottomDetectorV3:
                         close + depth,
 
                     "confidence":
-                        85,
+                        90,
 
                     "rsi":
-                        float(
-                            df.iloc[i]["rsi"]
-                        ),
+                        rsi,
 
                     "volume_ratio":
                         volume_ratio,
